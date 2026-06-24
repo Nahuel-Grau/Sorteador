@@ -1,12 +1,12 @@
-
 package igu;
 
 import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-
 public class Principal extends javax.swing.JFrame {
+
+    int contSorteo = 1;
 
     public Principal() {
         initComponents();
@@ -219,74 +219,86 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbMesActionPerformed
 
     private void btnCerrarSorteoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSorteoActionPerformed
-        // TODO add your handling code here:
+        txtCantGanadores.setText("");
+        cmbMes.setSelectedIndex(0);
+
+        DefaultTableModel modelo = (DefaultTableModel) tblGanadores.getModel();
+        modelo.setRowCount(0);
+        contSorteo = 1;
     }//GEN-LAST:event_btnCerrarSorteoActionPerformed
 
     private void btnSortearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortearActionPerformed
-        
-        if (!txtCantGanadores.getText().equals("")){
-        int cantGan = Integer.parseInt( txtCantGanadores.getText());
-        String mes; 
-        String maxDia;
-        String maxnro= "9999";
-        mes = (String) cmbMes.getSelectedItem();
-        String minDia = "01";
-        String minnro = "0001";
-        if(mes.equals("02")){
-            maxDia = "28";
-        }
-        else{
-            if(mes.equals("11") || mes.equals("06") 
-               ||mes.equals("04")|| mes.equals("09")){
-            maxDia = "30";
-            }
-            else{
-                 maxDia = "31";
-                }
-        }
-        
-        Random numRandom = new Random();
-        int minimoDia = Integer.parseInt(minDia);
-        int minimonro = Integer.parseInt(minnro);
-        int maximoDia= Integer.parseInt(maxDia);
-        int maximonro= Integer.parseInt(maxnro);
 
-        int numDiaSorteadoDia = numRandom.nextInt(maximoDia - minimoDia + 1) +minimoDia;
-        int numNroSorteadonro = numRandom.nextInt(maximonro - minimonro + 1) +minimonro;
-        String numSorteado = agregarCeros(numDiaSorteadoDia,mes, numNroSorteadonro);
-        
-        DefaultTableModel modelo = (DefaultTableModel)tblGanadores.getModel();
-        Object[] objeto= {1, numSorteado};
-        modelo.addRow(objeto);
-        }else{
+        if (!txtCantGanadores.getText().equals("")) {
+            int cantGan = Integer.parseInt(txtCantGanadores.getText());
+
+            if (contSorteo <= cantGan) {
+
+                String mes;
+                String maxDia;
+                String maxnro = "9999";
+                mes = (String) cmbMes.getSelectedItem();
+                String minDia = "01";
+                String minnro = "0001";
+                if (mes.equals("02")) {
+                    maxDia = "28";
+                } else {
+                    if (mes.equals("11") || mes.equals("06")
+                            || mes.equals("04") || mes.equals("09")) {
+                        maxDia = "30";
+                    } else {
+                        maxDia = "31";
+                    }
+                }
+
+                Random numRandom = new Random();
+                int minimoDia = Integer.parseInt(minDia);
+                int minimonro = Integer.parseInt(minnro);
+                int maximoDia = Integer.parseInt(maxDia);
+                int maximonro = Integer.parseInt(maxnro);
+
+                int numDiaSorteadoDia = numRandom.nextInt(maximoDia - minimoDia + 1) + minimoDia;
+                int numNroSorteadonro = numRandom.nextInt(maximonro - minimonro + 1) + minimonro;
+                String numSorteado = agregarCeros(numDiaSorteadoDia, mes, numNroSorteadonro);
+
+                DefaultTableModel modelo = (DefaultTableModel) tblGanadores.getModel();
+                Object[] objeto = {contSorteo, numSorteado};
+                modelo.addRow(objeto);
+                contSorteo++;
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Ya se alcanzó la cantidad de ganadores");
+            }
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Es necesario completar la cantidad de ganadores");
     }//GEN-LAST:event_btnSortearActionPerformed
-    } 
-    public String agregarCeros(int numDiaSorteadoDia, String mes, int numNroSorteadonro){
+
+    }
+
+    public String agregarCeros(int numDiaSorteadoDia, String mes, int numNroSorteadonro) {
         int largoStringDia = (Integer.toString(numDiaSorteadoDia)).length();
         int largoStringNro = (Integer.toString(numNroSorteadonro)).length();
         String numSorteado;
 
-        if(largoStringDia ==2){
-            
-        numSorteado = numDiaSorteadoDia + mes;
-        
-        }else{
-        numSorteado = "0"+numDiaSorteadoDia + mes;
+        if (largoStringDia == 2) {
+
+            numSorteado = numDiaSorteadoDia + mes;
+
+        } else {
+            numSorteado = "0" + numDiaSorteadoDia + mes;
 
         }
- 
-        if (largoStringNro==1){
-        numSorteado = numSorteado+"000"+numNroSorteadonro;
-        }else if(largoStringNro == 2){
-               numSorteado = numSorteado+"00"+numNroSorteadonro;
-             }else if(largoStringNro == 3){
-                 numSorteado = numSorteado+"0"+numNroSorteadonro;
-             }else{
-             numSorteado = numSorteado+numNroSorteadonro;
-             }
-        
-        
+
+        if (largoStringNro == 1) {
+            numSorteado = numSorteado + "000" + numNroSorteadonro;
+        } else if (largoStringNro == 2) {
+            numSorteado = numSorteado + "00" + numNroSorteadonro;
+        } else if (largoStringNro == 3) {
+            numSorteado = numSorteado + "0" + numNroSorteadonro;
+        } else {
+            numSorteado = numSorteado + numNroSorteadonro;
+        }
+
         return numSorteado;
     }
 
